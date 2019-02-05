@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="/js/script.js"></script>
+    <title>eCompare - Find best price</title>
+</head>
+<body>
+    <!-- Container for webpage content -->
+    <div class="container-fluid text-center">
+
+        <!-- logo  -->
+        <div class="row text-center">
+            <div class="col-12 text-center logoDiv">
+                <a href="/"> <img src="/images/logo.png" class="img-fluid" alt="Go to home page"> </a>
+            </div>
+        </div>
+
+        <!-- search bar and button  -->
+        <div class="row text-center"> 
+                <div class="col-2 text-center"></div>
+                <div class="col-8 text-center input-group">
+                    <input type="text" id="productNameBox" class="form-control" placeholder="Enter product name.. " aria-label="Product name"
+                        aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                        <a href="/result"><button class="btn btn-outline-secondary" type="button" onclick="setSearchedProductName()" id="btnFindProduct">Find best price!</button></a>
+                    </div>
+                </div>
+            <div class="col-2 text-center"></div>
+        </div>
+        <p class="webListFont">This website compare price from following shops:</p>
+
+        <!-- webpages used to fetch the data -->
+        <div class="row text-center">
+            <div class="col-1 text-center"></div>
+            <div class="col-2 text-center">
+                <a href="http://www.newegg.com"><img class="logoSize" src="/images/newegg.jpg" alt="www.newegg.com"></a>
+            </div>
+            <div class="col-2 text-center">
+                <a href="http://www.scan.co.uk"><img class="logoSize" src="/images/scan.png" alt="www.scan.co.uk"></a>
+            </div>
+            <div class="col-2 text-center">
+                <a href="http://www.ebuyer.com"><img class="logoSize" src="/images/ebuyer.png" alt="www.ebuyer.com"></a>
+            </div>
+            <div class="col-2 text-center">
+                <a href="http://www.novatech.co.uk"><img class="logoSize" src="/images/novatech.png" alt="www.novatech.co.uk"></a>
+            </div>
+            <div class="col-2 text-center">
+                <a href="http://www.overclockers.co.uk"><img class="logoSize" src="/images/overclockers.png" alt="www.overclockers.co.uk"></a>
+            </div>
+            <div class="col-1 text-center"></div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    function setSearchedProductName(){
+       var productName = document.getElementById('productNameBox').value;;
+       localStorage.setItem("searchedProduct", productName);
+    }
+</script>

@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: webscraping.TestSetName
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 3.82 s <<< FAILURE! - in webscraping.TestSetName
+testCloseConnection  Time elapsed: 0.133 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at webscraping.TestSetName.testCloseConnection(TestSetName.java:76)
+

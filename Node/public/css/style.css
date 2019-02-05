@@ -1,0 +1,50 @@
+
+.logoDiv{
+    padding-top: 30px;
+    padding-bottom: 50px;
+}
+
+.logoResult{
+    padding: 15px;
+}
+
+.paddingResultSearch{
+    padding-top: 25px;
+    padding-bottom: 25px;
+    padding-right: 20px;
+}
+
+.resultMenu{
+    padding-top: 75px;
+}
+
+.alignCenter{
+    align-items: center;
+}
+
+.logoSize{
+    height: 110px;
+}
+
+.webListFont{
+    font-family: Palatino Linotype;
+    font-size: 10px;
+    padding: 25px;
+}
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 0;
+    border-top: 1px solid #2c2b2b;
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 5px;
+}
+
+.changePageBtnSize{
+    width: 100px;
+}

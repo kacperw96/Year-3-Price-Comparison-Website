@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.5.0/css/all.css' integrity='sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU' crossorigin='anonymous'>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="/js/script.js"></script>
+    <!-- Vue development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- Link to JavaScript for Vue Router Library -->
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <!-- Axios library -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>eCompare - Find best price</title>
+</head>
+<body >
+    <div id="app" class="container-fluid">
+        <!-- Header - logo + search input + button -->
+        <div class="row">
+            <div class="col-3 text-left logoResult">
+                <a href="/">
+                    <img class="logoSize" src="/images/logo2.png" class="img-fluid" alt="Go to home page">
+                </a>
+            </div>
+            <div class="col-9 text-center paddingResultSearch">
+                <form>
+                    <div class="form-group">
+                        <input type="text" id="productName" onkeydown="return (event.keyCode!=13);" v-on:keyup.enter="loadNewProduct" class="form-control" placeholder="Enter porduct name.." name="product">
+                    </div>
+                    <button type="button" v-on:click="loadNewProduct" class="btn btn-outline-secondary">Find best price!</button>
+                </form>
+            </div>
+            <div class="col-12 text-right logoResult ">
+                <button v-on:click="previousPage" type="button" class="btn btn-outline-secondary btn-sm changePageBtnSize"><i style='font-size:24px' class='far'>&#xf359;</i> Previous</button>
+                <div id="resultInfo" style="display: inline">Displaying results 0-20 out of 0</div>
+                <button v-on:click="loadNextPage" type="button" class="btn btn-outline-secondary btn-sm changePageBtnSize">Next <i style='font-size:24px' class='far'>&#xf35a;</i></button>
+            </div>
+        </div>
+
+        <!-- Left side menu + products -->
+        <div class="row">
+
+            <!-- Left side menu -->
+            <div class="col-2 text-left resultMenu">
+                <div class="border rounded logoResult border-secondary">
+                    <div class="border rounded logoResult border-secondary">
+                        <h5>Order produts by:</h5>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1"
+                                checked>
+                            <label class="form-check-label" for="exampleRadios1">
+                                Price Low-High
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+                            <label class="form-check-label" for="exampleRadios2">
+                                Price High-Low
+                            </label>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="border logoResult border-secondary">
+                        <h5>Price range:</h5>
+                        <div class="input-group input-group-sm mb-3">
+                            Min: <input type="text" class="form-control" id="minPrice" placeholder="0" name="MinPrice">
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            Max: <input type="text" class="form-control" id="maxPrice" placeholder="1000000" name="MaxPrice">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="text-center">
+                        <button type="button" class="btn  btn-outline-secondary">Update</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- products  -->
+            <div id="productsBox" class="col-10 border rounded border-secondary paddingResultSearch">
+                <div class="row border-top border-bottom" v-for="model in models">
+                    <div class="col-2 center"><img style="height: 150px; padding-left: 20px;" v-bind:src="model.img"></div>
+                    <div class="col-8 center">
+                        <b><h3>{{model.manufacturer}}</h3></b>
+                        <h5>{{model.name}}</h5>
+                    </div>
+                    <div class="col-2 center"> 
+                        <h2>{{model.price}} £</h2>
+                        <a v-bind:href="model.url" target="_blank"><button type="button" class="btn btn-outline-secondary">Go to store</button></a> <!-- <b>LINK</b>: {{model.url}} -->
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="col-12 text-right logoResult ">
+            <button v-on:click="previousPage" type="button" class="btn btn-outline-secondary btn-sm changePageBtnSize"><i style='font-size:24px' class='far'>&#xf359;</i> Previous</button>
+            <div id="resultInfoBottom" style="display: inline">Displaying results 0-20 out of 0</div>
+            <button v-on:click="loadNextPage" type="button" class="btn btn-outline-secondary btn-sm changePageBtnSize">Next <i style='font-size:24px' class='far'>&#xf35a;</i></button>
+        </div>
+        <footer class="text-center">
+                <p>Website created by: <b>Kacper Wisniewski</b> &nbsp; &nbsp; &nbsp; Contact information: <b><a href="mailto:kw772@live.mdx.ac.uk">kw772@live.mdx.ac.uk</a></b></p>
+        </footer>
+    </div>
+</body>
+</html>
+
+<script>
+    var offsetNo = 0; //Stores value of offset
+    var totalItemsNo = 0; //Storage for total number of displayed product
+    var product; //Stores porduct name
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            models: []
+        },
+        methods: {
+            loadProduct: function () {
+                product =  localStorage.getItem("searchedProduct");
+                document.getElementById("productName").setAttribute('value', localStorage.getItem("searchedProduct"));
+                var localApp = this;
+                axios.get('/result/models/' + product + "?num_items=20&offset=" + offsetNo)
+                    .then(function (response) {
+                        totalItemsNo = response.data.totNumItems;
+                        localApp.models = response.data.models;
+                        document.getElementById("resultInfo").innerHTML = "Displaying results " + offsetNo + "-" + (offsetNo + 20) + " out of " + response.data.totNumItems;
+                        document.getElementById("resultInfoBottom").innerHTML = "Displaying results " + offsetNo + "-" + (offsetNo + 20) + " out of " + response.data.totNumItems;
+                    })
+                    .catch(function (error) {
+                        //Handle error
+                        console.log(error);
+                    });
+            },
+            loadNewProduct: function () {
+                offsetNo = 0;
+                product = document.getElementById("productName").value;
+                localStorage.setItem("searchedProduct", product);
+                var localApp = this;
+                axios.get('/result/models/' + product + "?num_items=20&offset=" + offsetNo)
+                    .then(function (response) {
+                        totalItemsNo = response.data.totNumItems;
+                        localApp.models = response.data.models;
+                        document.getElementById("resultInfo").innerHTML = "Displaying results " + offsetNo + "-" + (offsetNo + 20) + " out of " + response.data.totNumItems;
+                        document.getElementById("resultInfoBottom").innerHTML = "Displaying results " + offsetNo + "-" + (offsetNo + 20) + " out of " + response.data.totNumItems;
+                    })
+                    .catch(function (error) {
+                        //Handle error
+                        console.log(error);
+                    });
+            },
+            loadNextPage: function () {
+                offsetNo = offsetNo + 20;
+                if (offsetNo > totalItemsNo) {
+                    offsetNo = totalItemsNo - (totalItemsNo % 20);
+                    alert("There is no more prodouct to display");
+                }
+                var localApp = this;
+                axios.get('/result/models/' + product + "?num_items=20&offset=" + offsetNo)
+                    .then(function (response) {
+                        localApp.models = response.data.models;
+                        document.getElementById("resultInfo").innerHTML = "Displaying results " + + offsetNo + "-" + (offsetNo + 20) + " out of " + response.data.totNumItems;
+                        document.getElementById("resultInfoBottom").innerHTML = "Displaying results " + + offsetNo + "-" + (offsetNo + 20) + " out of " + response.data.totNumItems;
+                    })
+                    .catch(function (error) {
+                        //Handle error
+                        console.log(error);
+                    });
+            },
+            previousPage: function () {
+                offsetNo = offsetNo - 20;
+                if (offsetNo < 0) {
+                    offsetNo = 0
+                    alert("You are on the first page!")
+                };
+                var localApp = this;
+                axios.get('/result/models/' + product + "?num_items=20&offset=" + offsetNo)
+                    .then(function (response) {
+                        totalItemsNo = response.data.totNumItems;
+                        localApp.models = response.data.models;
+                        if (offsetNo === 0) {
+                            document.getElementById("resultInfo").innerHTML = "Displaying results 0-20 out of " + response.data.totNumItems;
+                            document.getElementById("resultInfoBottom").innerHTML = "Displaying results 0-20 out of " + response.data.totNumItems;
+                        } else {
+                            document.getElementById("resultInfo").innerHTML = "Displaying results " + offsetNo + "-" + (offsetNo + 20) + " out of " + response.data.totNumItems;
+                            document.getElementById("resultInfoBottom").innerHTML = "Displaying results " + offsetNo + "-" + (offsetNo + 20) + " out of " + response.data.totNumItems;
+                        }
+                    })
+                    .catch(function (error) {
+                        //Handle error
+                        console.log(error);
+                    });
+            }
+        },
+        created: function(){//Vue lifecycle hook, called when data is loaded.
+            //Load products from web service
+            this.loadProduct();
+        }
+    })
+</script>
